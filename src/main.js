@@ -6,13 +6,18 @@ import {
   clearGallery,
   showLoader,
   hideLoader,
+  showLoadMoreButton,
+  hideLoadMoreButton,
 } from './js/render-functions';
 
 const form = document.querySelector('.form');
+let page = 1;
+let query;
 
 form.addEventListener('submit', event => {
   event.preventDefault();
-  const query = event.target.elements['search-text'].value.trim();
+  page = 1;
+  query = event.target.elements['search-text'].value.trim();
   if (query.length == 0) {
     iziToast.warning({
       title: 'Warning',
@@ -22,10 +27,22 @@ form.addEventListener('submit', event => {
     return;
   }
   clearGallery();
+  showGallery();
+});
+
+document.querySelector('.load-more').addEventListener('click', event => {
+  page += 1;
+  showGallery();
+});
+
+function showGallery() {
   showLoader();
-  getImagesByQuery(query)
+  hideLoadMoreButton();
+
+  getImagesByQuery(query, page)
     .then(data => {
       const hits = data.hits;
+      const totalHits = data.totalHits;
       if (hits.length == 0) {
         iziToast.error({
           title: '',
@@ -33,7 +50,18 @@ form.addEventListener('submit', event => {
             'Sorry, there are no images matching your search query. Please try again!',
           position: 'topRight',
         });
-      } else createGallery(hits);
+      } else {
+        createGallery(hits);
+        if (page * 15 < totalHits) {
+          showLoadMoreButton();
+        } else {
+          iziToast.info({
+            message:
+              "We're sorry, but you've reached the end of search results.",
+            position: 'topRight',
+          });
+        }
+      }
     })
     .catch(error => {
       iziToast.error({
@@ -45,4 +73,4 @@ form.addEventListener('submit', event => {
     .finally(() => {
       hideLoader();
     });
-});
+}

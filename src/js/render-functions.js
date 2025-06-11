@@ -8,6 +8,7 @@ const lightbox = new SimpleLightbox('.gallery a', {
 
 const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
+const loadMore = document.querySelector('.load-more');
 
 export function createGallery(images) {
   gallery.insertAdjacentHTML(
@@ -37,6 +38,9 @@ export function createGallery(images) {
   );
 
   lightbox.refresh();
+  const elem = document.querySelector('.gallery li');
+  const rect = elem.getBoundingClientRect();
+  window.scrollBy({ top: 48 + rect.height * 2, behavior: 'smooth' });
 }
 
 export function clearGallery() {
@@ -49,4 +53,12 @@ export function showLoader() {
 
 export function hideLoader() {
   loader.style.display = 'none';
+}
+
+export function showLoadMoreButton() {
+  loadMore.style.display = 'block';
+}
+
+export function hideLoadMoreButton() {
+  loadMore.style.display = 'none';
 }
