@@ -30,9 +30,12 @@ form.addEventListener('submit', event => {
   showGallery();
 });
 
-document.querySelector('.load-more').addEventListener('click', event => {
+document.querySelector('.load-more').addEventListener('click', async event => {
   page += 1;
-  showGallery();
+  await showGallery();
+  const elem = document.querySelector('.gallery li');
+  const rect = elem.getBoundingClientRect();
+  window.scrollBy({ top: 48 + rect.height * 2, behavior: 'smooth' });
 });
 
 async function doStuff(query, page) {
@@ -68,9 +71,10 @@ async function doStuff(query, page) {
     hideLoader();
   }
 }
-function showGallery() {
+
+async function showGallery() {
   showLoader();
   hideLoadMoreButton();
 
-  doStuff(query, page);
+  await doStuff(query, page);
 }

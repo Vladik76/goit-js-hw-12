@@ -10,7 +10,7 @@ const gallery = document.querySelector('.gallery');
 const loader = document.querySelector('.loader');
 const loadMore = document.querySelector('.load-more');
 
-export function createGallery(images) {
+export async function createGallery(images) {
   gallery.insertAdjacentHTML(
     'beforeend',
     images
@@ -37,10 +37,8 @@ export function createGallery(images) {
       .join('')
   );
 
-  lightbox.refresh();
-  const elem = document.querySelector('.gallery li');
-  const rect = elem.getBoundingClientRect();
-  window.scrollBy({ top: 48 + rect.height * 2, behavior: 'smooth' });
+  await lightbox.refresh();
+  
 }
 
 export function clearGallery() {
