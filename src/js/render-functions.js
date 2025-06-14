@@ -38,7 +38,6 @@ export async function createGallery(images) {
   );
 
   await lightbox.refresh();
-  
 }
 
 export function clearGallery() {
